@@ -1,0 +1,38 @@
+{
+  "name": "rewatch_file_upload",
+  "version": "1.0.0",
+  "description": "Simple rest API to register, login, perform c.r.u.d operations using express and typescript and mongoose",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --config nodemon.json server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeeshan965/express-mongo-rest-api-ts.git"
+  },
+  "keywords": [
+    "rest-api"
+  ],
+  "author": "zeeshan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zeeshan965/express-mongo-rest-api-ts/issues"
+  },
+  "homepage": "https://github.com/zeeshan965/express-mongo-rest-api-ts#readme",
+  "dependencies": {
+    "@types/config": "^3.3.0",
+    "@types/express": "^4.17.15",
+    "@types/md5": "^2.3.2",
+    "@types/node": "^18.11.18",
+    "@types/node-fetch": "^2.6.3",
+    "config": "^3.3.9",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "graphql-request": "^6.0.0",
+    "md5": "^2.3.0",
+    "node-fetch": "^3.3.1",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
+  }
+}
