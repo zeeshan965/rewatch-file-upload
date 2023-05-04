@@ -1,18 +1,18 @@
 import express, {NextFunction, Request, Response} from "express";
-//import fetch from 'node-fetch';
+const api = require("./routes/index");
 
 import fs from 'fs';
 import crypto from 'crypto';
 
-const {GraphQLClient, gql} = require('graphql-request');
+// const {GraphQLClient, gql} = require('graphql-request');
 const path = require('path');
 const app = express();
 
-const endpoint = 'https://example-channel.rewatch.com/api/graphql';
-const apiToken = 'S9rgXB3ViLHbPABt9QjFSzWRW7DArQhg1NUCR8rP';
-const file_path = '/home/zeeshan-iqbaal/Pictures/video1.mp4';
+// const endpoint = 'https://example-channel.rewatch.com/api/graphql';
+// const apiToken = 'S9rgXB3ViLHbPABt9QjFSzWRW7DArQhg1NUCR8rP';
+// const file_path = '/home/zeeshan-iqbaal/Pictures/video1.mp4';
 
-const client = new GraphQLClient(endpoint, {
+/*const client = new GraphQLClient(endpoint, {
     headers: {
         Authorization: `Token token=${apiToken}`,
         'Content-Type': 'application/json',
@@ -31,38 +31,38 @@ const INITIATE_UPLOAD_MUTATION = `
             }
         }
     }
-`;
-const fileData = fs.readFileSync(file_path);
-const file = {
-    name: path.basename(file_path),
-    size: fs.statSync(file_path).size,
-    data: fileData,
-    type: 'video/mp4'
-};
+`;*/
+// const fileData = fs.readFileSync(file_path);
+// const file = {
+//     name: path.basename(file_path),
+//     size: fs.statSync(file_path).size,
+//     data: fileData,
+//     type: 'video/mp4'
+// };
 
 //console.log(file);
 
-const variables = {
+/*const variables = {
     input: {
         byteSize: file.size,
         checksum: crypto.createHash('md5').update(file.data).digest('base64'),
         contentType: file.type,
         filename: file.name,
     },
-};
+};*/
 
 //console.log(variables);
 
-interface queryResponse {
+/*interface queryResponse {
     initiateDirectVideoUpload: {
         uploadHeaders: string
         uploadId: string
         uploadUrl: string
         errors: []
     }
-}
+}*/
 
-interface videoDirectUpload {
+/*interface videoDirectUpload {
     createVideoFromDirectUpload:{
         video: {
             title: string;
@@ -70,9 +70,9 @@ interface videoDirectUpload {
         }
         errors: []
     }
-}
+}*/
 
-client.request(INITIATE_UPLOAD_MUTATION, variables).then((data: queryResponse) => {
+/*client.request(INITIATE_UPLOAD_MUTATION, variables).then((data: queryResponse) => {
     const initiation_result = data.initiateDirectVideoUpload;
     //console.log(initiation_result)
 
@@ -147,7 +147,7 @@ client.request(INITIATE_UPLOAD_MUTATION, variables).then((data: queryResponse) =
 
 }).catch((error: any) => {
     console.error(`initiateDirectVideoUpload mutation failed: ${error.message}`);
-});
+});*/
 
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -155,5 +155,6 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
     res.send('Hello World!')
 })
 
+app.use('/api', api);
 
 module.exports = app;
