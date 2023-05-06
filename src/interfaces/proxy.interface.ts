@@ -1,5 +1,7 @@
 interface ProxyInterface {
-    put(): void;
-
-    parseMessage(response: object[]): object[];
+    /**
+     * @param result
+     * @param fileData
+     */
+    put(result: InitDirectVideoUpload, fileData: Buffer): Promise<string | undefined>;
 }

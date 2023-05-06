@@ -8,14 +8,29 @@ export default class BaseProxyService implements ProxyInterface {
         this.client = this.getClient();
     }
 
-    parseMessage(response: object[]): object[] {
-        return [];
+    /**
+     * @param data
+     * @param fileData
+     */
+    public async put(data: InitDirectVideoUpload, fileData: Buffer): Promise<string | undefined> {
+        const uploadRequest = {
+            method: 'PUT',
+            headers: JSON.parse(data.uploadHeaders),
+            body: fileData,
+        };
+        try {
+            const response: Response = await fetch(data.uploadUrl, uploadRequest);
+            if (response.status !== 200) return;
+            console.log(response.status)
+            return response.url;
+        } catch (error) {
+            console.log(error)
+        }
     }
 
-    put(): void {
-
-    }
-
+    /**
+     *
+     */
     getClient() {
         const token = config.get('rewatch_token') as number;
         const uri = config.get('rewatch_uri') as string;

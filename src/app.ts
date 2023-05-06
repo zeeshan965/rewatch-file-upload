@@ -8,8 +8,17 @@ import crypto from 'crypto';
 const path = require('path');
 const app = express();
 
+// const endpoint = 'https://example-channel.rewatch.com/api/graphql';
+// const apiToken = 'S9rgXB3ViLHbPABt9QjFSzWRW7DArQhg1NUCR8rP';
+// const file_path = '/home/zeeshan-iqbaal/Pictures/video1.mp4';
 
-/*
+/*const client = new GraphQLClient(endpoint, {
+    headers: {
+        Authorization: `Token token=${apiToken}`,
+        'Content-Type': 'application/json',
+    },
+});
+
 const INITIATE_UPLOAD_MUTATION = `
     mutation ($input: InitiateDirectVideoUploadInput!) {
         initiateDirectVideoUpload(input: $input) {

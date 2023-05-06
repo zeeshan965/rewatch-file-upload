@@ -1,33 +1,51 @@
-import {Request} from "express";
 import BaseProxyService from "../proxies/base.proxy.service";
+import {Variables} from "graphql-request";
 
-export default class RewatchProxyService extends BaseProxyService implements ProxyInterface {
+export default class RewatchProxy extends BaseProxyService implements ProxyInterface {
 
-    private prepareInitiateDirectVideoUploadQuery() {
-        const INITIATE_UPLOAD_MUTATION = `
-            mutation ($input: InitiateDirectVideoUploadInput!) {
-                initiateDirectVideoUpload(input: $input) {
-                    uploadHeaders
-                    uploadId
-                    uploadUrl
-                    errors {
-                        message
-                        path
-                    }
-                }
+    /**
+     * @param query
+     * @param variables
+     */
+    public async request(query: string, variables: Variables): Promise<undefined | InitDirectVideoUpload> {
+        try {
+            const data: InitVideoUploadResponseInterface = await this.client.request(query, variables);
+            const initiation_result: InitDirectVideoUpload = data.initiateDirectVideoUpload;
+
+            // Check for any mutation errors, such as passing an invalid media type or filename.
+            if (initiation_result.errors.length > 0) {
+                const error_messages = initiation_result.errors.map((error: { message: string }) => error.message);
+                console.error(`initiateDirectVideoUpload mutation failed: ${error_messages.join(", ")}`);
+                return;
             }
-        `;
-        return INITIATE_UPLOAD_MUTATION
+            return initiation_result;
+        } catch (error) {
+            console.log(error);
+        }
+
     }
 
-    private initiateDirectVideoUpload() {
+    /**
+     * @param query
+     * @param variables
+     */
+    public async post_request(query: string, variables: Variables): Promise<createVideoFromDirectUpload | undefined> {
+        try {
+            const data: PostVideoDirectUploadInterface = await this.client.request(query, variables);
+            const result: createVideoFromDirectUpload = data.createVideoFromDirectUpload;
+            console.log(result);
+            if (result.errors.length > 0) {
+                const error_messages = result.errors.map((error: { message: string }) => {
+                    error.message
+                });
+                console.log(`createVideoFromDirectUpload mutation failed: ${error_messages.join(", ")}`);
+                return;
+            }
 
-    }
-
-    uploadVideo(req: Request) {
-        console.log(req.query?.path)
-        console.log(this.client)
-
+            return result;
+        } catch (error) {
+            console.log(error);
+        }
 
     }
 }

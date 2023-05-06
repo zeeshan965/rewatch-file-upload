@@ -3,7 +3,7 @@ import RewatchService from "../services/rewatch.service";
 
 export default class RestController {
 
-    /** @private rewatchService: RewatchProxyService */
+    /** @private rewatchService: RewatchService */
     private readonly rewatchService: RewatchService;
 
     constructor() {
@@ -17,12 +17,16 @@ export default class RestController {
      * @param next
      */
     async uploadImage(req: Request, res: Response, next: NextFunction) {
-        const path = req.query.path ?? '';
+        const path = `${req.query.path}`;
         if (path == '') return res.status(400).send({message: 'missing parameters!'});
-        this.rewatchService.uploadVideo(req);
+        const response = await this.rewatchService.uploadVideo(path);
 
-        return res.status(200)
-            .send({status: 200, message: 'success', data: path});
+        return res.status(200).send({
+            status: 200,
+            message: 'success',
+            path: path,
+            data: !response ? 'something went wrong!' : response
+        });
     }
 
     /**

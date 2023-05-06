@@ -1,11 +1,18 @@
-import {Request} from "express";
-import BaseProxyService from "../proxies/base.proxy.service";
-import {gql} from "graphql-request";
+import {gql, Variables} from "graphql-request";
 import fs from "fs";
-const path = require('path');
 import crypto from 'crypto';
+import RewatchProxy from "../proxies/rewatch.proxy";
 
-export default class RewatchService extends BaseProxyService implements ProxyInterface {
+const path = require('path');
+
+export default class RewatchService {
+
+    /** @private rewatchProxy: RewatchProxy */
+    private rewatchProxy: RewatchProxy;
+
+    constructor() {
+        this.rewatchProxy = new RewatchProxy()
+    }
 
     /**
      * @private
@@ -25,30 +32,72 @@ export default class RewatchService extends BaseProxyService implements ProxyInt
             }`
     }
 
-    private initiateDirectVideoUpload(file_path) {
-        const fileData = fs.readFileSync(file_path);
-        const file = {
-            name: path.basename(file_path),
-            size: fs.statSync(file_path).size,
-            data: fileData,
-            type: 'video/mp4'
-        };
-        this.prepareInitiateDirectVideoUploadQuery();
-        const variables = {
+    /**
+     * @private
+     */
+    private preparePostVideoFromDirectUploadQuery() {
+        return gql`
+            mutation($input: CreateVideoFromDirectUploadInput!) {
+                createVideoFromDirectUpload(input: $input) {
+                    video {
+                        title
+                        url
+                    }
+                    errors {
+                        message
+                        path
+                    }
+                }
+            }
+        `
+    }
+
+    /**
+     * @param file_path
+     * @param fileData
+     * @private
+     */
+    private prepareVariables(file_path: string, fileData: Buffer): Variables {
+        return {
             input: {
-                byteSize: file.size,
-                checksum: crypto.createHash('md5').update(file.data).digest('base64'),
-                contentType: file.type,
-                filename: file.name,
+                byteSize: fs.statSync(file_path).size,
+                checksum: crypto.createHash('md5').update(fileData).digest('base64'),
+                contentType: 'video/mp4',
+                filename: path.basename(file_path),
             },
         };
     }
 
-    uploadVideo(req: Request) {
-        const file_path = req.query.path;
-        this.initiateDirectVideoUpload(file_path)
-        console.log(req.query?.path)
-        console.log(this.client)
-        console.log(this.prepareInitiateDirectVideoUploadQuery())
+    /**
+     * @param uploadId
+     * @private
+     */
+    private preparePostVariables(uploadId: string): Variables {
+        return {
+            input: {
+                uploadId: uploadId,
+                title: "My Video ",
+                description: "My super neat video.",
+                visibility: "ON_CHANNEL",
+            },
+        };
+    }
+
+    /**
+     * @param file_path
+     */
+    public async uploadVideo(file_path: string) {
+        const fileData = fs.readFileSync(file_path);
+        const init_query: string = this.prepareInitiateDirectVideoUploadQuery();
+        const init_variables: Variables = this.prepareVariables(file_path, fileData);
+        const result: InitDirectVideoUpload | undefined = await this.rewatchProxy.request(init_query, init_variables);
+        if (!result) return;
+
+        const url = await this.rewatchProxy.put(result, fileData);
+        if (!url) return;
+
+        const post_query: string = this.preparePostVideoFromDirectUploadQuery();
+        const post_variables: Variables = this.preparePostVariables(result.uploadId);
+        return await this.rewatchProxy.post_request(post_query, post_variables);
     }
 }
