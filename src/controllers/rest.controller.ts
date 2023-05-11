@@ -49,7 +49,8 @@ export default class RestController {
      * @param res
      * @param next
      */
-    status = async (req: Request, res: Response, next: NextFunction) => {
+    primary = async (req: Request, res: Response, next: NextFunction) => {
+        console.log('primary');
         const twiml = new twilio.twiml.VoiceResponse();
         // twiml.gather();
 
@@ -66,6 +67,31 @@ export default class RestController {
         }
         res.type('text/xml');
         res.send(twiml.toString());
+        console.log('------------------------------------END primary-----------------------------------------')
+    }
+
+    /**
+     * @param req
+     * @param res
+     * @param next
+     */
+    secondary = async (req: Request, res: Response, next: NextFunction) => {
+        console.log('secondary');
+        console.log(req.body)
+        console.log(req.headers)
+        console.log('---------------------------------------------END secondary--------------------------------------------')
+    }
+
+    /**
+     * @param req
+     * @param res
+     * @param next
+     */
+    status = async (req: Request, res: Response, next: NextFunction) => {
+        console.log('status change call');
+        console.log(req.body)
+        console.log(req.headers)
+        console.log('------------------------------------END status-----------------------------------------')
     }
 
     /**
