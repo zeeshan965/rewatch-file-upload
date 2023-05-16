@@ -7,10 +7,4 @@ const router = express.Router();
 router.get("/", controller.uploadImage.bind(controller));
 router.get("/another_example", controller.anotherMethod);
 
-router.get("/status", controller.status);
-
-router.post("/primary", controller.primary);
-router.post("/secondary", controller.secondary);
-router.post("/status", controller.status);
-
 module.exports = router;

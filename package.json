@@ -20,13 +20,10 @@
   },
   "homepage": "https://github.com/zeeshan965/express-mongo-rest-api-ts#readme",
   "dependencies": {
-    "@google-cloud/dialogflow": "^5.7.1",
     "@types/config": "^3.3.0",
-    "@types/dialogflow": "^4.0.4",
     "@types/express": "^4.17.15",
     "@types/node": "^18.11.18",
     "config": "^3.3.9",
-    "dialogflow": "^4.0.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
