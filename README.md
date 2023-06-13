@@ -9,3 +9,4 @@ Application includes MVC and Service pattern for the implementation. A REST endp
 - copy .env.example file and create .env file to configure env variables
 - npm i to install the dependencies
 - nodemon server.ts
+- curl --location 'http://localhost:2700/api?path=file-path-on-the-drive'
